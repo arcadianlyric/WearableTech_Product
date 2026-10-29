@@ -1,0 +1,20 @@
+name: wearable
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pandas
+  - pyarrow
+  - pymongo
+  - numpy
+  - scipy
+  - statsmodels
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - bambi
+  - arviz
+  - pymc
+  - jupyterlab
+  - ipykernel
+  - h5netcdf
