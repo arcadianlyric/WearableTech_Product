@@ -17,11 +17,14 @@ MAIN = "tired ~ mid_dev_w + mid_dev_b + dur_dev_w + dur_dev_b + weekend + study_
 GEE = "tired ~ mid_dev_w + mid_dev_b + dur_dev_w + dur_dev_b + weekend + study_week_z"
 
 
-def prepare(p, exposure_col="mid_dev_min"):
-    """Within/between split, each part scaled by its own sd so effects are 'per 1 sd'."""
-    p = p[p["usable"] & p[exposure_col].notna() & p["dur_dev_h"].notna()].copy()
-    p["mid_dev"] = np.log1p(p[exposure_col])
-    p["dur_dev"] = p["dur_dev_h"]
+def prepare(p, exposure_col="mid_dev_min", dur_col="dur_dev_h", transform=np.log1p):
+    """Within/between split, each part scaled by its own sd so effects are 'per 1 sd'.
+
+    `mid_dev` is whatever exposure the analysis tests; robustness runs swap it.
+    """
+    p = p[p["usable"] & p[exposure_col].notna() & p[dur_col].notna()].copy()
+    p["mid_dev"] = transform(p[exposure_col])
+    p["dur_dev"] = p[dur_col]
     for x in EXPOSURES:
         b = p.groupby("uid")[x].transform("mean")
         w = p[x] - b
