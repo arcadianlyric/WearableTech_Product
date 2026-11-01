@@ -18,4 +18,3 @@ dependencies:
   - jupyterlab
   - ipykernel
   - h5netcdf
-  - pypdf
