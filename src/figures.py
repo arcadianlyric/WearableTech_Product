@@ -15,32 +15,32 @@ SERIES, REF, INK, INK2, SURFACE = "#2a78d6", "#a3a29c", "#0b0b0b", "#52514e", "#
 MDE = 1.35  # OR per sd at 80% power, analysis_plan.md section 6
 
 plt.rcParams.update({
-    "font.family": ["PingFang SC", "Heiti SC", "Arial Unicode MS", "sans-serif"],
+    "font.family": ["Helvetica Neue", "Arial", "DejaVu Sans", "sans-serif"],
     "axes.unicode_minus": False, "figure.facecolor": SURFACE, "axes.facecolor": SURFACE,
     "axes.edgecolor": REF, "axes.labelcolor": INK2, "xtick.color": INK2, "ytick.color": INK,
     "axes.spines.top": False, "axes.spines.right": False, "axes.spines.left": False,
 })
 
 TERMS = {
-    "mid_dev_w": "睡眠中点偏离（个人内部）",
-    "mid_dev_b": "睡眠中点偏离（个人之间）",
-    "dur_dev_w": "睡眠时长偏离（个人内部）",
-    "dur_dev_b": "睡眠时长偏离（个人之间）",
-    "weekend": "周末（是/否）",
-    "study_week_z": "研究周",
+    "mid_dev_w": "Sleep midpoint deviation (within-person)",
+    "mid_dev_b": "Sleep midpoint deviation (between-person)",
+    "dur_dev_w": "Sleep duration deviation (within-person)",
+    "dur_dev_b": "Sleep duration deviation (between-person)",
+    "weekend": "Weekend (yes/no)",
+    "study_week_z": "Study week",
 }
 CHECKS = {
-    "0 primary": "主分析",
-    "1 min nights 3": "1 窗口至少 3 晚",
-    "1 min nights 5": "1 窗口至少 5 晚",
-    "2 first report before 13:00": "2 仅 13:00 前首次作答",
-    "3 all reports, 3-level": "3 全部作答（三层模型）",
-    "4 outcome TENSE/ANXIOUS or SAD": "4 结局：紧张焦虑或难过",
-    "5a exposure: 7-night sd of midpoint": "5a 暴露：7 晚中点标准差",
-    "5b exposure: efficiency deviation": "5b 暴露：睡眠效率偏离",
-    "6 H3 negative control: next night": "6 负对照：之后那一晚",
-    "9 raw minutes, winsorised 99%": "9 原始分钟（99% 缩尾）",
-    "8 leave-one-person-out (GEE OR range)": "8 逐一剔除一人（GEE 范围）",
+    "0 primary": "Primary analysis",
+    "1 min nights 3": "1 Window with >= 3 nights",
+    "1 min nights 5": "1 Window with >= 5 nights",
+    "2 first report before 13:00": "2 First report before 13:00",
+    "3 all reports, 3-level": "3 All reports (3-level model)",
+    "4 outcome TENSE/ANXIOUS or SAD": "4 Outcome: tense/anxious or sad",
+    "5a exposure: 7-night sd of midpoint": "5a Exposure: 7-night midpoint sd",
+    "5b exposure: efficiency deviation": "5b Exposure: efficiency deviation",
+    "6 H3 negative control: next night": "6 Negative control: next night",
+    "9 raw minutes, winsorised 99%": "9 Raw minutes (99% winsorised)",
+    "8 leave-one-person-out (GEE OR range)": "8 Leave-one-person-out (GEE range)",
 }
 
 
@@ -67,8 +67,8 @@ def main_or():
     lab, est, lo, hi = zip(*rows)
     fig, ax = plt.subplots(figsize=(7.5, 3.6))
     interval_plot(ax, lab, est, lo, hi, emphasize=0)
-    ax.set_xlabel("比值比（OR），每增加 1 个标准差，对数坐标；中位数和 95% 可信区间")
-    ax.set_title("首次作答为“疲倦”的主模型（1,587 天，53 人）", loc="left", color=INK, fontsize=11)
+    ax.set_xlabel("Odds ratio (OR) per 1 sd, log scale; median and 95% credible interval")
+    ax.set_title('Primary model: first report is "tired" (1,587 days, 53 people)', loc="left", color=INK, fontsize=11)
     fig.tight_layout()
     fig.savefig(FIG / "main_or.png", dpi=200)
 
@@ -80,9 +80,9 @@ def forest():
     fig, ax = plt.subplots(figsize=(7.5, 4.8))
     interval_plot(ax, lab, r["OR"], r["OR_lo"], r["OR_hi"], emphasize=0)
     ax.axvline(MDE, color=INK2, lw=1, ls=(0, (3, 3)), zorder=0)
-    ax.text(MDE, len(lab) - 0.45, "80% 功效对应的 OR ", color=INK2, fontsize=8, ha="right", va="center")
-    ax.set_xlabel("个人内部暴露每增加 1 个标准差的 OR（对数坐标）")
-    ax.set_title("H1 的稳健性：各分析下的个人内部效应", loc="left", color=INK, fontsize=11)
+    ax.text(MDE, len(lab) - 0.45, "OR at 80% power ", color=INK2, fontsize=8, ha="right", va="center")
+    ax.set_xlabel("OR per 1 sd of within-person exposure (log scale)")
+    ax.set_title("H1 robustness: within-person effect across analyses", loc="left", color=INK, fontsize=11)
     fig.tight_layout()
     fig.savefig(FIG / "robustness_forest.png", dpi=200)
 

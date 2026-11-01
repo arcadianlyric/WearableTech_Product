@@ -2,9 +2,9 @@
 
 > Using LifeSnaps Fitbit data and daily mood check-ins to size the gap between "sleep data looks fine" and "I feel tired", test the usual explanations one by one, and find what wearable products still miss. The analysis plan was frozen before outcomes were unblinded.
 
-English | [中文](README_CN.md) | [🔎 Interactive page](https://arcadianlyric.github.io/WearableTech_Product/)
+English | [中文](README_CN.md) | [Interactive page](https://arcadianlyric.github.io/WearableTech_Product/)
 
-## 🎯 Impact
+## Impact
 
 - **Sized a pain point the score hides.** 35% of tired days follow ≥ 7 h of sleep; of the 40 people with at least one "good night", 15 (38%) still woke up tired after one. Duration and efficiency don't capture this part of how users feel.
 - **Tested the usual explanations and retired two popular ones.**
@@ -15,7 +15,7 @@ English | [中文](README_CN.md) | [🔎 Interactive page](https://arcadianlyric
 - **Turned findings into testable product hypotheses.** An explanation layer ("your sleep was fine, but yesterday's load was twice your usual"), load-aware recovery scores, cycle-aware baselines, by-sex evaluation as a release gate, and, in the other direction, graded body-signal alerts for "strained but not tired", each with an A/B or external-data validation plan. See [Product insights](#-product-insights).
 - **Credible because the analysis was locked first.** The pipeline was built on outcome-blinded data and the plan committed (`4f44e67`) before unblinding. Power simulation puts 80% power at OR ≈ 1.35, so the null means "no effect larger than 1.35". Negative controls and 9 robustness checks agree.
 
-## 📖 Background
+## Background
 
 **How the project got to "the score is fine, so why am I tired?"** It started from the most common advice in the industry, "keep a regular schedule". The pre-registered test did not support it. The better question then became: how often do users feel tired when the data looks fine, what drives it, and who is hit hardest? Results report the pre-registered analysis in full first, then the post hoc and exploratory work it led to, each labelled with its level of evidence, and [Product insights](#-product-insights) pulls them together.
 
@@ -25,7 +25,7 @@ Public analyses tend to blur between- and within-person effects, split days at r
 
 LifeSnaps (CC-BY-4.0, direct download) was chosen over GLOBEM (PhysioNet credentialed access) because its mood reports are daily, not weekly. Bayesian hierarchical models (Bambi/PyMC) are used because with 53 people a frequentist random-slope GLMM easily ends up singular, and a posterior for the slope sd is more honest than a boundary estimate of zero.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 conda env create -f environment.yml && conda activate wearable   # Python 3.13
@@ -51,7 +51,7 @@ python src/posthoc_early_waking.py reports/posthoc_early_waking
 python src/export_viz_data.py data/interim/panel.parquet docs/data.json
 ```
 
-## 🗂️ Project structure
+## Project structure
 
 ```
 Wearable_Tech/
@@ -89,7 +89,7 @@ graph LR
   I --> J[figures.py]
 ```
 
-## 🔬 Materials and Methods
+## Materials and Methods
 
 **Inputs.** Fitbit `sleep` records (start, end, minutes asleep, efficiency, main-sleep flag) from `fitbit.bson`; the Context and Mood Survey from `sema.bson` (one of 7 moods, up to 3 times a day); coarse demographics and steps from the daily CSV. The daily CSV has no bed/wake times, so the BSON is parsed with `bson.decode_file_iter` from `pymongo`, streaming 9.7 GB of BSON into 450 MB of parquet with no MongoDB install. The headline "71 people × 4 months" shrinks to 1,587 days from 53 people with both last night's sleep and a mood report.
 
@@ -110,7 +110,7 @@ Bambi 0.21 / PyMC 6.3, default weakly informative priors, 4 chains × 1,000 draw
 
 **Power.** Real people, days and exposures; simulated outcomes (intercept sd 1.0, slope sd 0.3); 200 runs per OR. Power: 0.15 / 0.48 / 0.73 / 0.99 at OR 1.1 / 1.2 / 1.3 / 1.5.
 
-## 📊 Results
+## Results
 
 ![Primary model](reports/figures/main_or.png)
 
@@ -161,7 +161,7 @@ Joint model, checked on all nights (`adjusted.csv`):
 
 **Temperature and tiredness by sex (`temperature_by_sex.csv`)**: within-person temperature OR is 0.93 (0.71–1.21) for 20 women and 1.17 (0.85–1.61) for 31 men. This **cannot rule out a menstrual-cycle effect**: within-person temperature variability is the same in women and men (median sd 0.43 vs 0.42 °C), so this data shows no sign of the cycle's warming, though comparing variability cannot prove the sensor misses it, and the dataset has no cycle labels.
 
-## 🧭 Product insights
+## Product insights
 
 The analyses above are also a way to find user needs. Each item reads: pain point → evidence → product opportunity → how to validate. Evidence strength is tagged: **pre-registered** (frozen before unblinding), **post hoc** (written spec), **exploratory** (not pre-specified; hypothesis only).
 
@@ -224,7 +224,7 @@ Item 1 is "data fine, still tired". This is the opposite: physiology departs fro
   - **A graded escalation path**: a sustained resting-HR rise together with higher temperature and respiratory rate can precede infection symptoms (Mishra et al., *Nature Biomedical Engineering* 2020; Radin et al., *Lancet Digital Health* 2020), which supports "you may be getting sick, rest up". Only signals such as irregular rhythm or low SpO2 justify "see a doctor", and those go through the medical-device regulatory route. Never diagnose, and word alerts to avoid anxiety.
 - **Validation**: use outcomes beyond tiredness (sick days, infections, injuries; PMData logs injuries); measure alert precision and false-alarm rate; A/B test whether users change their plans and whether alerts raise anxiety or churn.
 
-## 💬 Discussion
+## Discussion
 
 **For the product.** In this sample, sleeping *less than you usually do* explains next-day tiredness better than sleeping *at a different time than usual*. Duration deviation is the better-supported next-day signal. The exploratory analysis adds that "high sleep score, still tired" may be better explained by the previous day's training load, which argues for recovery scores that weigh training load rather than sleep alone. Timing regularity may matter over longer horizons or for a subgroup; this sample cannot tell.
 
@@ -274,6 +274,6 @@ Item 1 is "data fine, still tired". This is the opposite: physiology departs fro
 - [ ] Lightweight model comparison: personal base rate vs hand-crafted features vs a simple sequence model under leave-subject-out CV, testing whether a complex model beats the personal baseline (~8–10 h). Multimodal deep learning lives in a separate project.
 - [ ] GLOBEM (497 people) to test timing regularity at the weekly scale.
 
-## 📚 Data and citation
+## Data and citation
 
 Yfantidou, S. *et al.* LifeSnaps, a 4-month multi-modal dataset capturing unobtrusive snapshots of our lives in the wild. *Scientific Data* 9, 663 (2022). Data: Zenodo 7229547, CC-BY-4.0. Raw data are not included in this repository.
