@@ -1,4 +1,4 @@
-# Wearable_Tech: the score says you slept well, so why are you tired?
+# WearableTech: the score says you slept well, so why are you tired?
 
 > Using LifeSnaps Fitbit data and daily mood check-ins to size the gap between "sleep data looks fine" and "I feel tired", test the usual explanations one by one, and find what wearable products still miss. The analysis plan was frozen before outcomes were unblinded.
 
