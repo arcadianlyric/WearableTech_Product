@@ -114,6 +114,8 @@ Bambi 0.21 / PyMC 6.3, default weakly informative priors, 4 chains × 1,000 draw
 
 ![Primary model](reports/figures/main_or.png)
 
+*Figure 1. Posterior median OR and 95% credible interval per 1 standard deviation of each exposure (weekend is a yes/no term, so its OR compares weekend with weekday). Values are printed at right.*
+
 | Term | OR (median) | 95% CrI |
 |---|---|---|
 | **Midpoint deviation, within (H1)** | **1.09** | **0.92–1.31** |
@@ -126,6 +128,8 @@ Bambi 0.21 / PyMC 6.3, default weakly informative priors, 4 chains × 1,000 draw
 **H1 not supported.** P(β > 0) = 0.83: leaning positive, but below the detectable size. **H2 undetermined**: the slope-sd posterior runs from 0.01 to 0.47 (person-level ORs roughly 0.76–1.56). **H3**: the next night's deviation gives OR 1.04, about the same as the primary estimate, so whatever small signal exists is not specific to last night.
 
 ![Robustness](reports/figures/robustness_forest.png)
+
+*Figure 2. Within-person sleep-midpoint effect under each robustness check (point estimate and 95% interval). The dashed line marks the smallest OR detectable with 80% power (1.35, analysis plan section 6).*
 
 All 9 checks give ORs between 0.93 and 1.10 with intervals spanning 1; FDR-adjusted GEE p ≥ 0.71. Being tired yesterday predicts neither a missing report today (OR 0.85, 0.65–1.12) nor a missing sleep record tonight (OR 1.07, 0.85–1.34). Leave-one-person-out GEE ORs span 1.03–1.10.
 

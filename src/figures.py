@@ -58,6 +58,9 @@ def interval_plot(ax, labels, est, lo, hi, emphasize=None):
     ax.grid(axis="x", color=REF, alpha=0.3, lw=0.5)
     if emphasize is not None:
         ax.get_yticklabels()[emphasize].set_fontweight("bold")
+    for yi, e, l, h in zip(y, est, lo, hi):
+        ax.text(1.02, yi, f"{e:.2f} ({l:.2f}-{h:.2f})", transform=ax.get_yaxis_transform(),
+                color=INK2, fontsize=8, va="center", ha="left")
 
 
 def main_or():
@@ -67,10 +70,9 @@ def main_or():
     lab, est, lo, hi = zip(*rows)
     fig, ax = plt.subplots(figsize=(7.5, 3.6))
     interval_plot(ax, lab, est, lo, hi, emphasize=0)
-    ax.set_xlabel("Odds ratio (OR) per 1 sd, log scale; median and 95% credible interval")
+    ax.set_xlabel("Odds ratio (OR) per 1 standard deviation (log scale)")
     ax.set_title('Primary model: first report is "tired" (1,587 days, 53 people)', loc="left", color=INK, fontsize=11)
-    fig.tight_layout()
-    fig.savefig(FIG / "main_or.png", dpi=200)
+    fig.savefig(FIG / "main_or.png", dpi=200, bbox_inches="tight")
 
 
 def forest():
@@ -80,11 +82,10 @@ def forest():
     fig, ax = plt.subplots(figsize=(7.5, 4.8))
     interval_plot(ax, lab, r["OR"], r["OR_lo"], r["OR_hi"], emphasize=0)
     ax.axvline(MDE, color=INK2, lw=1, ls=(0, (3, 3)), zorder=0)
-    ax.text(MDE, len(lab) - 0.45, "OR at 80% power ", color=INK2, fontsize=8, ha="right", va="center")
-    ax.set_xlabel("OR per 1 sd of within-person exposure (log scale)")
+    ax.text(MDE, len(lab) - 0.45, "80% power ", color=INK2, fontsize=8, ha="right", va="center")
+    ax.set_xlabel("OR per 1 standard deviation of within-person exposure (log scale)")
     ax.set_title("H1 robustness: within-person effect across analyses", loc="left", color=INK, fontsize=11)
-    fig.tight_layout()
-    fig.savefig(FIG / "robustness_forest.png", dpi=200)
+    fig.savefig(FIG / "robustness_forest.png", dpi=200, bbox_inches="tight")
 
 
 if __name__ == "__main__":
