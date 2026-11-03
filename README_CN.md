@@ -13,21 +13,21 @@
 
 *1,587 天、53 人，括号内是按人 bootstrap 的 95% 区间。这是未校正的探索性描述，校正后的效应见下文。*
 
-- 📒 **收支两头都差时，疲倦比例约是都不差时的 2.2 倍。** 这是本项目的主线：疲倦同时取决于"睡回来多少"和"昨天花掉多少"，而睡眠分数只看前者。
-- 📉 **分数能解释的只是一部分**：睡够 7 小时后仍有 12.2% 的天报告疲倦，不足 7 小时是 16.5%。有过"好睡眠"记录的 40 人里，15 人（38%）遇到过"睡得好还是累"。
-- 💤 **收入端的结论稳健**：单晚少睡 1 小时，次日疲倦概率上升 **3.3 个百分点**（95% 可信区间 1.9–4.8），基线约 14.7%。校正缺失、负暴露对照和所有敏感性分析的结论都一致（事后分析）。
-- 🏋️ **支出端有信号，但还不够硬**：前一天多练 30 分钟，次日疲倦概率上升 **3.1 个百分点**（1.0–5.5）。它通过了冻结的判读规则，但对函数形式和缺失假设敏感，需要独立数据确认。
-- ❌ **排除了三个流行解释**："作息要规律"（预注册主假设，OR 1.09，0.92–1.31）、"夜间体温高 → 情绪差"（个人内部 OR 1.00）、"深睡不够"（全部夜晚 OR 0.96）。
-- 👩 **支线：分层后，男女的差距在情绪，不在疲倦**：女性平均多睡 28 分钟，疲倦比例相近（15.4% 对 14.3%），负面情绪却约是男性的 2 倍（23.6% 对 13.1%）。只看睡眠和疲倦，这个差距完全看不出来。详见[支线：性别分层](#支线性别分层)。
-- 🔬 **方法针对观测性数据的真实问题**：人内/人间分解和随机斜率处理个体差异，g-computation 和时序调整集处理随时间变化的混杂，IPW 和 MNAR 临界点分析处理约 43% 的人日缺失，负暴露对照和 E-value 评估未测混杂。
-- 🔒 **先锁死分析，再看结果**：主分析在结局盲化的数据上跑通后才提交计划（`4f44e67`）；因果分析虽然是事后分析，也先冻结了估计量和判读规则（`e15e766`）。
+- **收支两头都差时，疲倦比例约是都不差时的 2.2 倍。** 这是本项目的主线：疲倦同时取决于"睡回来多少"和"昨天花掉多少"，而睡眠分数只看前者。
+- **分数能解释的只是一部分**：睡够 7 小时后仍有 12.2% 的天报告疲倦，不足 7 小时是 16.5%。有过"好睡眠"记录的 40 人里，15 人（38%）遇到过"睡得好还是累"。
+- **收入端的结论稳健**：单晚少睡 1 小时，次日疲倦概率上升 **3.3 个百分点**（95% 可信区间 1.9–4.8），基线约 14.7%。校正缺失、负暴露对照和所有敏感性分析的结论都一致（事后分析）。
+- **支出端有信号，但还不够硬**：前一天多练 30 分钟，次日疲倦概率上升 **3.1 个百分点**（1.0–5.5）。它通过了冻结的判读规则，但对函数形式和缺失假设敏感，需要独立数据确认。
+- **排除了三个流行解释**："作息要规律"（预注册主假设，OR 1.09，0.92–1.31）、"夜间体温高 → 情绪差"（个人内部 OR 1.00）、"深睡不够"（全部夜晚 OR 0.96）。
+- **支线：分层后，男女的差距在情绪，不在疲倦**：女性平均多睡 28 分钟，疲倦比例相近（15.4% 对 14.3%），负面情绪却约是男性的 2 倍（23.6% 对 13.1%）。只看睡眠和疲倦，这个差距完全看不出来。详见[支线：性别分层](#支线性别分层)。
+- **方法针对观测性数据的真实问题**：人内/人间分解和随机斜率处理个体差异，g-computation 和时序调整集处理随时间变化的混杂，IPW 和 MNAR 临界点分析处理约 43% 的人日缺失，负暴露对照和 E-value 评估未测混杂。
+- **先锁死分析，再看结果**：主分析在结局盲化的数据上跑通后才提交计划（`4f44e67`）；因果分析虽然是事后分析，也先冻结了估计量和判读规则（`e15e766`）。
 
 ### Key words
-Causal inference, observational time series, within-person effects, missing data, personalization, wearable product, Bayesian
+Personalization, causal inference, observational time series, within-person effects, wearable product, Bayesian
 
 ## Background
 
-Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据的"恢复"和"准备度"建议。这个项目的问题来自我自己用 Apple Watch 的体验：有时睡眠分数很高，时长和深睡也够，第二天还是累。
+Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据的"恢复"和"准备度"建议。这个项目的问题来自我自己用 wearable device 的体验：有时睡眠分数很高，时长和深睡也够，第二天还是累。
 
 项目一开始检验的是行业里最常见的建议："作息要规律"。预注册检验没有支持它，真正值得问的问题也随之变了：用户觉得累，可是数据看起来没问题，这种情况有多常见？是什么造成的？哪些用户受影响最大？这个转折的过程保留在 [Results](#results) 里，每个结果都标注了证据等级。
 
@@ -35,7 +35,7 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 
 **这个项目的创新点**有三个。第一，把疲倦当成结局：之前基于 LifeSnaps 的工作基本排除了疲倦。第二，把"预测疲倦"换成"估计一次改变的绝对效应"，产品可以直接拿它做决策。第三，把假阴性、混杂和缺失写成可以检验的假设，而不是写在局限里了事。
 
-数据选了 LifeSnaps（CC-BY-4.0，可以直接下载），而没有选 GLOBEM（需要 PhysioNet 凭证访问），因为 LifeSnaps 的情绪是**每天**作答的，粒度比 GLOBEM 的每周问卷细。模型用贝叶斯分层模型（Bambi/PyMC），因为 53 个人估随机斜率时，频率学派的模型容易出现奇异拟合；贝叶斯方法可以直接给出斜率标准差的后验分布，不会把它悄悄估成 0。
+数据选了 LifeSnaps[1]（CC-BY-4.0，可以直接下载），而没有选 GLOBEM[2]（需要 PhysioNet 凭证访问），因为 LifeSnaps 的情绪是**每天**作答的，粒度比 GLOBEM 的每周问卷细。模型用贝叶斯分层模型（Bambi/PyMC），因为 53 个人估随机斜率时，频率学派的模型容易出现奇异拟合；贝叶斯方法可以直接给出斜率标准差的后验分布，不会把它悄悄估成 0。
 
 ## 方法概要
 
@@ -101,7 +101,7 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 
 **夜间皮肤温度（事后）**
 
-已有研究（Karim 等，medRxiv 2025）报告"夜间体温越高，越容易难过或紧张"是最强的预测因子，但没有区分个人之间和个人内部。补充计划写在 `analysis_addendum_temperature.md`，在跑分析之前就写好了。样本是 1,551 天、51 人。
+已有研究[3]报告"夜间体温越高，越容易难过或紧张"是最强的预测因子，但没有区分个人之间和个人内部。补充计划写在 `analysis_addendum_temperature.md`，在跑分析之前就写好了。样本是 1,551 天、51 人。
 
 | 结局 | 不分解（仿照原研究） | 个人内部 | 个人之间（控制性别） | 女性 |
 |---|---|---|---|---|
@@ -185,11 +185,11 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 
 ### 文献和现有产品
 
-- **周期信号是真实的**：Oura 戒指的研究中（26 名周期规律的健康女性），睡眠结构基本不随周期变化，但黄体期皮肤温度和睡眠心率更高，HRV 有下降趋势（Alzueta 等，2022）。mcPHASES（42 人，192 个完整周期）里，夜间腕部皮肤温度和静息心率都有显著的阶段差异（F(3,123) = 11.63 和 10.26，p < .001），都在卵泡期最低、黄体期最高（Lin 等，2026）。这正是睡眠指标正常、恢复指标却变差的场景。
-- **症状可能比阶段更有用**：两项运动员小样本研究都发现，症状负担和睡眠、恢复的关系比周期阶段或激素水平更明显（Pearson 等，2025，24 人；Kullik 等，2025，8 人）。这只能算线索，还不能推广到普通用户。
-- **Apple Watch 已经能回顾性估计排卵**：Series 8 及之后的型号和所有 Ultra 用腕温检测排卵后的双相升温，连续戴表睡觉约 2 个周期后才可用（Apple 支持文档）。前瞻性队列（262 人，899 个周期）中，腕温信号达到 0.2 °C 的已完成周期有 80.8% 给出了估计，平均绝对误差 1.22 天，89.0% 落在 ±2 天内（Wang 等，2025）。
-- **这个功能的限制决定了产品设计**：它是**回顾性**的，排卵之后才能知道；约两成周期没有估计；可能排卵了却没有明显的双相变化，温度也会受睡眠环境等因素影响。Apple 明确说明它不能用于避孕，估计值也不保证确实发生了排卵（Apple 支持文档）。
-- **研究人群很窄**：Whoop 的大样本研究（2,596 人，42,759 个周期）发现睡眠更短和周期更不规律相关，但排除了使用激素避孕、怀孕和围绝经期的女性（Gonzalez 等，2026）；mcPHASES 的参与者是平均 20.9 岁的加拿大年轻人，研究前三个月内使用过激素疗法或避孕的人被排除。真实用户比这些研究复杂得多。
+- **周期信号是真实的**：Oura 戒指的研究中（26 名周期规律的健康女性），睡眠结构基本不随周期变化，但黄体期皮肤温度和睡眠心率更高，HRV 有下降趋势[4]。mcPHASES（42 人，192 个完整周期）里，夜间腕部皮肤温度和静息心率都有显著的阶段差异（F(3,123) = 11.63 和 10.26，p < .001），都在卵泡期最低、黄体期最高[5]。这正是睡眠指标正常、恢复指标却变差的场景。
+- **症状可能比阶段更有用**：两项运动员小样本研究都发现，症状负担和睡眠、恢复的关系比周期阶段或激素水平更明显（分别为 24 人和 8 人）[6,7]。这只能算线索，还不能推广到普通用户。
+- **Apple Watch 已经能回顾性估计排卵**：Series 8 及之后的型号和所有 Ultra 用腕温检测排卵后的双相升温，连续戴表睡觉约 2 个周期后才可用[8]。前瞻性队列（262 人，899 个周期）中，腕温信号达到 0.2 °C 的已完成周期有 80.8% 给出了估计，平均绝对误差 1.22 天，89.0% 落在 ±2 天内[9]。
+- **这个功能的限制决定了产品设计**：它是**回顾性**的，排卵之后才能知道；约两成周期没有估计；可能排卵了却没有明显的双相变化，温度也会受睡眠环境等因素影响。Apple 明确说明它不能用于避孕，估计值也不保证确实发生了排卵[8]。
+- **研究人群很窄**：Whoop 的大样本研究（2,596 人，42,759 个周期）发现睡眠更短和周期更不规律相关，但排除了使用激素避孕、怀孕和围绝经期的女性[10]；mcPHASES 的参与者是平均 20.9 岁的加拿大年轻人，研究前三个月内使用过激素疗法或避孕的人被排除。真实用户比这些研究复杂得多。
 
 ### 产品机会
 
@@ -217,7 +217,7 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 
 ### 怎么验证
 
-- **离线**：用 mcPHASES（有基于激素的周期阶段，但标签来自 Mira 的专有算法，不是独立金标准）比较通用基线和考虑周期的基线，看黄体期"恢复差"误报能减少多少；再比较"只用周期日"和"用回顾性排卵重新分期"的差别。mcPHASES 是 PhysioNet 受限数据，代码可以公开，数据不能。
+- **离线**：用 mcPHASES[5]（有基于激素的周期阶段，但标签来自 Mira 的专有算法，不是独立金标准）比较通用基线和考虑周期的基线，看黄体期"恢复差"误报能减少多少；再比较"只用周期日"和"用回顾性排卵重新分期"的差别。mcPHASES 是 PhysioNet 受限数据，代码可以公开，数据不能。
 - **线上**：A/B 测试解释层，事先规定按性别和周期状态分析，并按女性子组计算样本量。主要指标是"分数和感受的一致率"，护栏指标是焦虑反馈、关闭周期功能的比例和留存。
 - **个人**：用 Apple Health 导出数据和症状打卡做 n-of-1，复用本项目的个人内部模型。
 
@@ -233,7 +233,7 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
   - **解释层**：睡眠分数高、用户却觉得累的时候，主动给出原因，比如"昨天的训练量比你平时高 40%"，而不是让用户怀疑设备不准。
   - **恢复评分算上训练负荷**，不能只看睡眠。
   - **一键主观打卡**：收集"分数和感受对不上"的样本，这本身就是最有价值的个性化训练数据。
-- **怎么验证**：北极星指标定为"分数和感受的一致率"；A/B 测试展示带训练负荷解释的卡片，看打卡率、用户对分数的信任度，以及 4 周留存。训练负荷先在 PMData 上做预设检验。
+- **怎么验证**：北极星指标定为"分数和感受的一致率"；A/B 测试展示带训练负荷解释的卡片，看打卡率、用户对分数的信任度，以及 4 周留存。训练负荷先在 PMData[11] 上做预设检验。
 
 ### 2. 用"和你平时比"，不要只用绝对阈值（事后）
 
@@ -247,7 +247,7 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 
 ### 4. 先做个人基线，再做复杂模型（预设 + 文献）
 
-- **证据**：个人之间的差异远大于每天的波动（个人截距标准差 0.72）；有好睡眠记录的人里，三分之一从来没报告过疲倦。已有研究中（Yang 等，2025），在随机划分的个性化设置下，"用户均值"基线在 LifeSnaps 上超过了文中的多模态模型（AUC 80.4 对 74.6），但在 PMData 上落后（84.1 对 89.0）。
+- **证据**：个人之间的差异远大于每天的波动（个人截距标准差 0.72）；有好睡眠记录的人里，三分之一从来没报告过疲倦。已有研究中[12]，在随机划分的个性化设置下，"用户均值"基线在 LifeSnaps 上超过了文中的多模态模型（AUC 80.4 对 74.6），但在 PMData 上落后（84.1 对 89.0）。
 - **产品机会**：先上线个人基线和用户分群，再考虑复杂模型；复杂模型必须以"打败个人均值"为上线门槛。
 
 ### 5. 主观标签稀缺，打卡要做到几乎零成本（数据集描述）
@@ -268,11 +268,11 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
   - 3 个信号中至少 2 个同时偏离的"强负荷日"占 12%，疲倦率是 32%（其他日子是 14%），**仍然有 68% 不觉得累**。这些人报告"开心"或"警觉"的比例更高（40% 对 28%），和"处于唤醒状态"的描述一致；但这同样可能来自运动、饮酒或咖啡因等寻常原因。
   - **"有负荷但不累"并不预示未来 3 天会更累**：OR 1.03（0.67–1.59）。所以不能用"你之后会垮"来推销这个功能。它的价值要用疲倦以外的结局来证明。
   - **提醒规则的代价**（[交互模拟器](https://arcadianlyric.github.io/WearableTech_Product/)）：这里只用过去 14 天做基线，也就是真实产品能拿到的数据。默认规则是 2 个信号、连续 2 天、1 个标准差，平均每人每月提醒 1.0 次（0.8–1.2）；提醒日的疲倦比例是 26%（10%–40%），基础比例是 16%，区间有重叠；只覆盖 6.9% 的疲倦日。默认规则是事先定好的，其余 26 条规则只作敏感性探索。
-  - 生理学背景：慢性睡眠限制的实验中，主观困倦很快就不再上升，认知表现却持续下降（Van Dongen 等，*Sleep* 2003）。"感觉还好"不等于"已经恢复"。
+  - 生理学背景：慢性睡眠限制的实验中，主观困倦很快就不再上升，认知表现却持续下降[13]。"感觉还好"不等于"已经恢复"。
 - **产品机会**：
   - **身体信号提醒要和主观感受分开**："你的身体在承受负荷，即使你感觉还好"。单一信号的偏离太常见（29% 的天数），每天都提醒会造成提醒疲劳。触发条件至少要求**多个信号同时偏离、持续 2–3 天以上**。
   - **先归因再提醒**：能用训练负荷、饮酒、晚餐时间或黄体期解释的负荷，提示"今天轻一点"即可；**无法解释、持续多天的负荷**才是值得关注的信号。
-  - **分级的升级路径**：持续多天的静息心率升高，叠加体温和呼吸频率升高，已有研究显示这可能早于感染症状出现（Mishra 等，*Nature Biomedical Engineering* 2020；Radin 等，*Lancet Digital Health* 2020），可以提示"可能在生病，注意休息"。心律不齐、血氧偏低这类信号才建议就医，而且要走医疗器械的合规路径。整个过程不做诊断，措辞要避免引起焦虑。
+  - **分级的升级路径**：持续多天的静息心率升高，叠加体温和呼吸频率升高，已有研究显示这可能早于感染症状出现[14,15]，可以提示"可能在生病，注意休息"。心律不齐、血氧偏低这类信号才建议就医，而且要走医疗器械的合规路径。整个过程不做诊断，措辞要避免引起焦虑。
 - **怎么验证**：用疲倦以外的结局，比如病假、感染、受伤（PMData 有伤病记录）；衡量提醒的精确率和误报率；A/B 测试看用户是否因此调整安排，以及提醒是否增加焦虑或流失。
 
 ### B. 早醒的归因：压力和皮质醇，还是别的原因？（探索）
@@ -280,8 +280,8 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 一个常见的抱怨是：压力大的时候，凌晨很早就醒，然后再也睡不着。可穿戴设备能记录"醒得比平时早"，但测不了皮质醇，也分不清是什么原因造成的。
 
 - **生理背景**：皮质醇有昼夜节律，入睡后不久降到最低，下半夜逐渐升高，醒来后 30–45 分钟达到峰值（皮质醇觉醒反应，CAR）。下半夜正是皮质醇上升的时段，所以压力引起的 HPA 轴（下丘脑-垂体-肾上腺轴）过度活跃，很自然地表现为早醒和醒后难以再入睡。相关证据：
-  - 慢性失眠患者晚间和夜间的皮质醇、ACTH 偏高（Vgontzas 等，*J Clin Endocrinol Metab* 2001）。
-  - 只是"预期要早起"，醒来之前 ACTH 就已经升高（Born 等，*Nature* 1999），说明这条轴会提前为醒来做准备。
+  - 慢性失眠患者晚间和夜间的皮质醇、ACTH 偏高[16]。
+  - 只是"预期要早起"，醒来之前 ACTH 就已经升高[17]，说明这条轴会提前为醒来做准备。
   - 清晨早醒也是抑郁的典型症状之一。
 - **手表测到的不是皮质醇**：心率、HRV、皮肤电（EDA）反映的是交感神经和肾上腺髓质系统，这个系统起效快，以分钟计；皮质醇属于 HPA 轴，起效慢，以几十分钟到几小时计。两者常常一起变化，但不能互相替代。把"HRV 低"直接说成"皮质醇高"是错误的。
 - **不同原因的数据特征**（不靠激素也能先做初步归因）：
@@ -300,7 +300,7 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
   - **头发皮质醇**：每 1 cm 头发大约对应 1 个月的累积水平，适合和几周到几个月的压力、睡眠趋势对照，不适合和单晚的睡眠比较。
   - **尿液激素检测**（比如干尿激素检测）：能覆盖一整天的皮质醇曲线，但成本较高。
   - **汗液皮质醇传感器**：已有研究原型，还没有消费级产品，可以作为长期关注的方向。
-  - **公开数据**：MMASH（22 名健康年轻男性）同时有唾液皮质醇和褪黑素、RR 间期、活动记录仪数据和睡眠数据，可以用来检验"夜间心率和 HRV 能不能预测清晨的皮质醇"。不过它只有男性，24 小时的记录也很短。
+  - **公开数据**：MMASH[18]（22 名健康年轻男性）同时有唾液皮质醇和褪黑素、RR 间期、活动记录仪数据和睡眠数据，可以用来检验"夜间心率和 HRV 能不能预测清晨的皮质醇"。不过它只有男性，24 小时的记录也很短。
 - **可行的 n-of-1 设计**：在 2–4 周里，压力大的日子和平常的日子都按上面的方法采集唾液皮质醇；同时记录压力、饮酒、咖啡因和周期日；手表这边提取最后一次醒来的时间、最后 2 小时的觉醒时长，以及醒来前的心率和 HRV。然后用本项目的个人内部模型，检验"前一天的压力 → 早醒"和"早醒 → 皮质醇觉醒反应"这两条关系。
 - **在 LifeSnaps 上的初步检验**（`src/posthoc_early_waking.py` → `reports/posthoc_early_waking/early_waking.csv`；3,280 晚、64 人）：
   - "早醒"定义为最后醒来的时间比本人平时（按工作日和周末分开算中位数）早 60 分钟以上。其中**入睡时间正常、只是醒得早**的占 9.3% 的夜晚，中位数早了 89 分钟；**整段睡眠一起提前**的占 3.5%。
@@ -328,8 +328,6 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 
 **To-do。**
 
-- [x] 用 g-computation、IPW 和 MNAR 临界点分析估计睡眠和训练负荷的绝对效应。
-- [x] 按性别分层，并写出女性用户的产品方案。
 - [ ] 把睡眠时长作为**预设的主假设**，在 PMData（16 人，每日 1–5 分的疲劳、准备度）上做独立检验，复现前先写好补充计划。
 - [ ] 在 PMData 上把"前一天训练量 → 次日疲倦"作为预设假设检验，并用累积 logit 混合模型，同时改善运动量的函数形式。
 - [ ] 分布滞后模型：前 1–3 天的训练量和急性/慢性负荷比，检验支出是否累积。
@@ -340,36 +338,25 @@ Whoop、Oura、Apple Watch 这类产品的核心卖点，是基于个人数据�
 - [ ] 轻量的模型对比：个人基础率、手工特征模型和一个简单的序列模型，用留一受试者交叉验证，检验"复杂模型能不能赢过个人基线"（约 8–10 小时）。多模态深度学习另开一个项目，不放在这里。
 - [ ] 以 GLOBEM（497 人）为大样本，检验作息规律性在每周时间尺度上的效应。
 
-## 数据与引用
+## 参考文献
 
-本仓库不包含原始数据。
+本仓库不包含原始数据。LifeSnaps 数据：Zenodo 7229547，CC-BY-4.0。
 
-**数据集**
-
-- Yfantidou, S. *et al.* LifeSnaps, a 4-month multi-modal dataset capturing unobtrusive snapshots of our lives in the wild. *Scientific Data* 9, 663 (2022). [doi:10.1038/s41597-022-01764-x](https://doi.org/10.1038/s41597-022-01764-x)。数据：Zenodo 7229547，CC-BY-4.0。
-- Thambawita, V. *et al.* PMData: a sports logging dataset. *Proc. 11th ACM Multimedia Systems Conference*, 231–236 (2020). [doi:10.1145/3339825.3394926](https://doi.org/10.1145/3339825.3394926)
-- Xu, X. *et al.* GLOBEM Dataset: multi-year datasets for longitudinal human behavior modeling generalization. *NeurIPS Datasets and Benchmarks Track* (2022). [arXiv:2211.02733](https://arxiv.org/abs/2211.02733)
-- Rossi, A. *et al.* A public dataset of 24-h multi-levels psycho-physiological responses in young healthy adults. *Data* 5, 91 (2020). [doi:10.3390/data5040091](https://doi.org/10.3390/data5040091)（MMASH）
-- Lin, G. *et al.* A longitudinal dataset of physiological, hormonal, metabolic, and self-reported menstrual health data. *Scientific Data* 13, 411 (2026). [doi:10.1038/s41597-026-06805-3](https://doi.org/10.1038/s41597-026-06805-3)（mcPHASES）
-
-**基于 LifeSnaps 的已有工作**
-
-- Karim, H. T., Matin, A. & Goel, M. Passive sensing with psyche: utilizing data from wearable technology to predict emotion states. *medRxiv* (2025). 预印本，未经同行评审。[doi:10.1101/2025.02.13.25322254](https://doi.org/10.1101/2025.02.13.25322254)
-- Yang, Z., Yu, H. & Sano, A. Contrastive pretraining for stress detection with multimodal wearable sensor data and surveys. *Proceedings of Machine Learning Research* 287, 166–178 (2025). [PMC12975034](https://pmc.ncbi.nlm.nih.gov/articles/PMC12975034/)
-
-**女性健康和周期**
-
-- Alzueta, E. *et al.* Tracking sleep, temperature, heart rate, and daily symptoms across the menstrual cycle with the Oura Ring in healthy women. *International Journal of Women's Health* 14, 491–503 (2022). [doi:10.2147/IJWH.S341917](https://doi.org/10.2147/IJWH.S341917)
-- Gonzalez, A. *et al.* The menstrual cycle through the lens of a wearable device: insights into physiology, sleep, and cycle variability. *npj Digital Medicine* 9, 633 (2026). [doi:10.1038/s41746-026-02799-9](https://doi.org/10.1038/s41746-026-02799-9)
-- Kullik, L. *et al.* The impact of menstrual cycle phase and symptoms on sleep, recovery, and stress in elite female basketball athletes: a longitudinal study. *Frontiers in Physiology* 16, 1663657 (2025). [doi:10.3389/fphys.2025.1663657](https://doi.org/10.3389/fphys.2025.1663657)
-- Pearson, M. A. *et al.* Menstrual cycle symptoms, but not oestrogen or progesterone concentrations, are associated with sleep in female athletes. *European Journal of Sport Science* 25, e70038 (2025). [doi:10.1002/ejsc.70038](https://doi.org/10.1002/ejsc.70038)
-- Wang, Y. *et al.* Performance of algorithms using wrist temperature for retrospective ovulation day estimate and next menses start day prediction: a prospective cohort study. *Human Reproduction* 40, 469–478 (2025). [doi:10.1093/humrep/deaf005](https://doi.org/10.1093/humrep/deaf005)
-- Apple. [Receive retrospective ovulation estimates on Apple Watch](https://support.apple.com/120357)；[Cycle Tracking Instructions for Use](https://www.apple.com/legal/ifu/cycle-tracking/ct-ifu-en_US.pdf)。
-
-**睡眠、压力和疾病信号**
-
-- Van Dongen, H. P. A. *et al.* The cumulative cost of additional wakefulness: dose-response effects on neurobehavioral functions and sleep physiology from chronic sleep restriction and total sleep deprivation. *Sleep* 26, 117–126 (2003). [doi:10.1093/sleep/26.2.117](https://doi.org/10.1093/sleep/26.2.117)
-- Vgontzas, A. N. *et al.* Chronic insomnia is associated with nyctohemeral activation of the hypothalamic-pituitary-adrenal axis: clinical implications. *Journal of Clinical Endocrinology & Metabolism* 86, 3787–3794 (2001). [doi:10.1210/jcem.86.8.7778](https://doi.org/10.1210/jcem.86.8.7778)
-- Born, J. *et al.* Timing the end of nocturnal sleep. *Nature* 397, 29–30 (1999). [doi:10.1038/16166](https://doi.org/10.1038/16166)
-- Mishra, T. *et al.* Pre-symptomatic detection of COVID-19 from smartwatch data. *Nature Biomedical Engineering* 4, 1208–1220 (2020). [doi:10.1038/s41551-020-00640-6](https://doi.org/10.1038/s41551-020-00640-6)
-- Radin, J. M. *et al.* Harnessing wearable device data to improve state-level real-time surveillance of influenza-like illness in the USA: a population-based study. *The Lancet Digital Health* 2, e85–e93 (2020). [doi:10.1016/S2589-7500(19)30222-5](https://doi.org/10.1016/S2589-7500(19)30222-5)
+1. Yfantidou, S. *et al.* LifeSnaps, a 4-month multi-modal dataset capturing unobtrusive snapshots of our lives in the wild. *Scientific Data* 9, 663 (2022). [doi:10.1038/s41597-022-01764-x](https://doi.org/10.1038/s41597-022-01764-x)
+2. Xu, X. *et al.* GLOBEM Dataset: multi-year datasets for longitudinal human behavior modeling generalization. *NeurIPS Datasets and Benchmarks Track* (2022). [arXiv:2211.02733](https://arxiv.org/abs/2211.02733)
+3. Karim, H. T., Matin, A. & Goel, M. Passive sensing with psyche: utilizing data from wearable technology to predict emotion states. *medRxiv* (2025).（预印本，未经同行评审）。[doi:10.1101/2025.02.13.25322254](https://doi.org/10.1101/2025.02.13.25322254)
+4. Alzueta, E. *et al.* Tracking sleep, temperature, heart rate, and daily symptoms across the menstrual cycle with the Oura Ring in healthy women. *International Journal of Women's Health* 14, 491–503 (2022). [doi:10.2147/IJWH.S341917](https://doi.org/10.2147/IJWH.S341917)
+5. Lin, G. *et al.* A longitudinal dataset of physiological, hormonal, metabolic, and self-reported menstrual health data. *Scientific Data* 13, 411 (2026). [doi:10.1038/s41597-026-06805-3](https://doi.org/10.1038/s41597-026-06805-3) mcPHASES 数据集。
+6. Pearson, M. A. *et al.* Menstrual cycle symptoms, but not oestrogen or progesterone concentrations, are associated with sleep in female athletes. *European Journal of Sport Science* 25, e70038 (2025). [doi:10.1002/ejsc.70038](https://doi.org/10.1002/ejsc.70038)
+7. Kullik, L. *et al.* The impact of menstrual cycle phase and symptoms on sleep, recovery, and stress in elite female basketball athletes: a longitudinal study. *Frontiers in Physiology* 16, 1663657 (2025). [doi:10.3389/fphys.2025.1663657](https://doi.org/10.3389/fphys.2025.1663657)
+8. Apple. [Receive retrospective ovulation estimates on Apple Watch](https://support.apple.com/120357)；[Cycle Tracking Instructions for Use](https://www.apple.com/legal/ifu/cycle-tracking/ct-ifu-en_US.pdf)。
+9. Wang, Y. *et al.* Performance of algorithms using wrist temperature for retrospective ovulation day estimate and next menses start day prediction: a prospective cohort study. *Human Reproduction* 40, 469–478 (2025). [doi:10.1093/humrep/deaf005](https://doi.org/10.1093/humrep/deaf005)
+10. Gonzalez, A. *et al.* The menstrual cycle through the lens of a wearable device: insights into physiology, sleep, and cycle variability. *npj Digital Medicine* 9, 633 (2026). [doi:10.1038/s41746-026-02799-9](https://doi.org/10.1038/s41746-026-02799-9)
+11. Thambawita, V. *et al.* PMData: a sports logging dataset. *Proc. 11th ACM Multimedia Systems Conference*, 231–236 (2020). [doi:10.1145/3339825.3394926](https://doi.org/10.1145/3339825.3394926)
+12. Yang, Z., Yu, H. & Sano, A. Contrastive pretraining for stress detection with multimodal wearable sensor data and surveys. *Proceedings of Machine Learning Research* 287, 166–178 (2025). [PMC12975034](https://pmc.ncbi.nlm.nih.gov/articles/PMC12975034/)
+13. Van Dongen, H. P. A. *et al.* The cumulative cost of additional wakefulness: dose-response effects on neurobehavioral functions and sleep physiology from chronic sleep restriction and total sleep deprivation. *Sleep* 26, 117–126 (2003). [doi:10.1093/sleep/26.2.117](https://doi.org/10.1093/sleep/26.2.117)
+14. Mishra, T. *et al.* Pre-symptomatic detection of COVID-19 from smartwatch data. *Nature Biomedical Engineering* 4, 1208–1220 (2020). [doi:10.1038/s41551-020-00640-6](https://doi.org/10.1038/s41551-020-00640-6)
+15. Radin, J. M. *et al.* Harnessing wearable device data to improve state-level real-time surveillance of influenza-like illness in the USA: a population-based study. *The Lancet Digital Health* 2, e85–e93 (2020). [doi:10.1016/S2589-7500(19)30222-5](https://doi.org/10.1016/S2589-7500(19)30222-5)
+16. Vgontzas, A. N. *et al.* Chronic insomnia is associated with nyctohemeral activation of the hypothalamic-pituitary-adrenal axis: clinical implications. *Journal of Clinical Endocrinology & Metabolism* 86, 3787–3794 (2001). [doi:10.1210/jcem.86.8.7778](https://doi.org/10.1210/jcem.86.8.7778)
+17. Born, J. *et al.* Timing the end of nocturnal sleep. *Nature* 397, 29–30 (1999). [doi:10.1038/16166](https://doi.org/10.1038/16166)
+18. Rossi, A. *et al.* A public dataset of 24-h multi-levels psycho-physiological responses in young healthy adults. *Data* 5, 91 (2020). [doi:10.3390/data5040091](https://doi.org/10.3390/data5040091) MMASH 数据集。
