@@ -5,3 +5,4 @@ __pycache__/
 .ipynb_checkpoints/
 memory/
 ref/
+architect_prompt.md
