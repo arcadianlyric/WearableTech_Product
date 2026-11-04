@@ -1,15 +1,15 @@
 # WearableTech: the score looks fine, so why am I still tired?
 
-> Fatigue works like a ledger: the sleep score records only the income, not the spending. Using LifeSnaps Fitbit data and daily mood check-ins, this project estimates the absolute effects of short sleep and training load on next-day tiredness in observational time series with no randomized experiment, and rules out several popular explanations.
+> Fatigue works like a ledger: the sleep score records only the income, not the spending. Using LifeSnaps Fitbit data and daily mood check-ins, this project estimates the absolute effects of short sleep and training load on next-day tiredness in observational time series with no randomized experiment, and tests several popular explanations.
 
 English | [中文](README_CN.md) | [Interactive page](https://arcadianlyric.github.io/WearableTech_Product/)
 
 ## Impact
 
-- **When both sides of the ledger are bad, the share of tired days is about 2.2 times the share when neither is.** This is the main thread of the project: tiredness depends on both how much sleep you got back and how much you spent yesterday, and the sleep score only sees the first. **The income side is robust**: sleeping 1 hour less on a single night raises next-day tiredness probability by 3.3 percentage points (95% credible interval 1.9–4.8), from a baseline of about 14.7%. The conclusion holds after correcting for missingness, with the negative-exposure control, and in all sensitivity analyses (post hoc).
-- **The score explains only part of it.** After ≥ 7 h of sleep, 12.2% of days still report tiredness, versus 16.5% after < 7 h. Of the 40 people with at least one "good night", 15 (38%) have had a "slept well but still tired" day.
-- **Three popular explanations were ruled out**: "keep a regular schedule" (pre-registered primary hypothesis, OR 1.09, 0.92–1.31), "warmer nights → worse mood" (within-person OR 1.00), and "not enough deep sleep" (OR 0.96 across all nights).
-- **Side thread: after stratifying, the male-female gap is in mood, not in tiredness.** Women sleep 28 minutes longer on average and report tiredness at a similar rate (15.4% vs 14.3%), yet report negative mood about twice as often as men (23.6% vs 13.1%). Looking only at sleep and tiredness, this gap is invisible. See [Side thread: sex stratification](#side-thread-sex-stratification).
+- **When both sides of the ledger are bad, the share of tired days is about 2.2 times the share when neither is.** This is the main thread of the project: tiredness is associated with both how much sleep you got back and how much you spent yesterday, and the sleep score only sees the first. **The income side is consistent across specifications, but it rests on an untestable assumption**: if there is no unmeasured confounding, sleeping 1 hour less on a single night raises next-day tiredness probability by 3.0 percentage points (95% credible interval 1.6–4.6), from a baseline of about 14.6%. The estimate holds after correcting for missingness, with the negative-exposure control, and in the sensitivity analyses (post hoc), but a moderate unmeasured confounder could explain it away (E-value at the interval end 1.45).
+- **The score explains only part of it.** After ≥ 7 h of sleep, 12.1% of days still report tiredness, versus 16.4% after < 7 h. Of the 40 people with at least one "good night", 15 (38%) have had a "slept well but still tired" day.
+- **Three popular explanations are not supported by these data**: "keep a regular schedule" (pre-registered primary hypothesis, OR 1.10, 0.92–1.31), "warmer nights → worse mood" (within-person OR 0.99, 0.82–1.20), and "not enough deep sleep" as Fitbit measures it (OR 0.98, 0.84–1.15 across all nights). Large effects look unlikely for the last two; none of the three intervals excludes a small effect, and the schedule interval still allows an effect about as large as E1.
+- **Side thread: after stratifying, the male-female gap is in mood, not in tiredness.** Women sleep 28 minutes longer on average and report tiredness at a similar rate (15.2% vs 14.2%), yet report negative mood about twice as often as men (23.6% vs 13.5%). Looking only at sleep and tiredness, this gap is invisible. See [Side thread: sex stratification](#side-thread-sex-stratification).
 
 ### Key words
 Personalization, causal inference, observational time series, within-person effects, wearable product, Bayesian
@@ -30,7 +30,7 @@ I chose LifeSnaps [1] (CC-BY-4.0, freely downloadable) over GLOBEM [2] (requires
 
 The full data processing, model specification, reproduction commands and project structure are in [SUPPLEMENT.md](SUPPLEMENT.md) (bilingual).
 
-**Data.** LifeSnaps, 1,587 person-days from 53 people. The outcome is whether the first EMA of the day (Ecological Momentary Assessment, a short mood check-in pushed during daily life) was "tired". All exposures are computed relative to the person's own baseline.
+**Data.** LifeSnaps, 1,581 person-days from 53 people. The outcome is whether the first EMA (Ecological Momentary Assessment, a short mood check-in pushed during daily life) completed after waking was "tired"; reports filled in before the night's sleep ended are not counted. All exposures are computed relative to the person's own baseline.
 
 **Estimand.** Shift each day's actual exposure by a fixed amount and compare the tiredness probability before and after the shift. The main quantity is the risk difference (percentage points).
 
@@ -49,7 +49,7 @@ The full data processing, model specification, reproduction commands and project
 | About 43% of person-days missing | Two-step IPW plus an MNAR tipping-point analysis |
 | Unmeasured confounding | Negative-exposure controls and E-values |
 
-**Decision rule** (frozen). The causal reading is stated only if all three hold: the Bayesian risk-difference interval excludes 0 in the expected direction, IPW agrees in direction, and the negative-control interval includes 0. Then the wording is "supports a causal interpretation under the stated assumptions".
+**Decision rule** (frozen). The causal reading is stated only if all three hold: the Bayesian risk-difference interval excludes 0 in the expected direction, IPW agrees in direction, and the negative-control interval includes 0. Then the wording is "supports a causal interpretation under the stated assumptions". The rule was frozen after the direction of the effect had been seen and is lenient; passing it is a minimum, not evidence of causation.
 
 **Lock the analysis before looking at results.** The main analysis was run on outcome-blinded data before the plan was committed (`4f44e67`). The causal analysis is post hoc, but its estimands and decision rule were also frozen first (`e15e766`).
 
@@ -59,22 +59,22 @@ The full data processing, model specification, reproduction commands and project
 
 ### 1. How large is the gap: the score explains part of it, not all (exploratory)
 
-- Across all days, 42.5% followed ≥ 7 h of sleep; among the 233 tired days, 35.2% did. Sleeping 7 h or more helps, but it separates poorly: 12.2% tired vs 16.5%.
-- A "good night" is defined as ≥ 7 h of sleep with efficiency at or above the median: 384 nights (24% of all days) from 40 people. The tired share after these nights is 9.6% versus 14.7% overall, yet 16% of tired days still come after them.
+- Across all days, 42.4% followed ≥ 7 h of sleep; among the 230 tired days, 35.2% did. Sleeping 7 h or more helps, but it separates poorly: 12.1% tired vs 16.4%.
+- A "good night" is defined as ≥ 7 h of sleep with efficiency at or above the median: 382 nights (24% of all days) from 40 people. The tired share after these nights is 9.4% versus 14.5% overall, yet 16% of tired days still come after them.
 - 15 of the 40 people have had at least one "slept well but still tired" day.
 
 **Stratifying by both sides of the ledger (unadjusted, descriptive).** Crossing whether last night was shorter than the person's usual with whether yesterday's activity was above the person's usual:
 
 | Share tired on the first check-in the next day | Yesterday's activity not above usual | Yesterday's activity above usual |
 |---|---|---|
-| **Last night not shorter than usual** | 9.6% (6.8–12.7) | 13.3% (8.7–18.4) |
-| **Last night shorter than usual** | 16.6% (12.1–21.2) | **21.5% (14.6–29.3)** |
+| **Last night not shorter than usual** | 9.8% (7.0–13.0) | 13.0% (8.3–18.1) |
+| **Last night shorter than usual** | 16.2% (11.7–20.9) | **21.2% (14.4–28.9)** |
 
-*1,587 days, 53 people; brackets are 95% person-level bootstrap intervals. This is an unadjusted exploratory description; adjusted effects follow below.*
+*1,581 days, 53 people; brackets are 95% person-level bootstrap intervals. This is an unadjusted exploratory description; adjusted effects follow below.*
 
-When both sides are bad (21.5%), the tired share is about 2.2 times that when neither is (9.6%). Adjusted effects are in sections 3 to 5 below.
+When both sides are bad (21.2%), the tired share is about 2.2 times that when neither is (9.8%). Adjusted effects are in sections 3 to 5 below.
 
-### 2. Explanations that were ruled out
+### 2. Explanations the data do not support
 
 **Schedule regularity (pre-specified)**
 
@@ -84,34 +84,34 @@ When both sides are bad (21.5%), the tired share is about 2.2 times that when ne
 
 | Parameter | OR (median) | 95% credible interval |
 |---|---|---|
-| **Sleep midpoint deviation, within person (H1)** | **1.09** | **0.92–1.31** |
-| Sleep midpoint deviation, between people | 1.23 | 0.96–1.56 |
-| Sleep duration deviation, within person | 0.73 | 0.63–0.85 |
-| Sleep duration deviation, between people | 0.94 | 0.78–1.12 |
-| Weekend | 1.35 | 0.97–1.86 |
-| Random-slope SD (logit scale) | 0.20 | 0.01–0.47 |
+| **Sleep midpoint deviation, within person (H1)** | **1.10** | **0.92–1.31** |
+| Sleep midpoint deviation, between people | 1.25 | 0.97–1.60 |
+| Sleep duration deviation, within person | 0.76 | 0.65–0.88 |
+| Sleep duration deviation, between people | 0.94 | 0.78–1.13 |
+| Weekend | 1.34 | 0.97–1.87 |
+| Random-slope SD (logit scale) | 0.19 | 0.01–0.48 |
 
-- **H1 is not supported.** Under the decision rule written in advance (the interval must exclude 1), deviation in sleep timing shows no detectable within-person link to next-day tiredness. P(β > 0) = 0.83, leaning positive, but the effect is smaller than the design can detect.
-- **H2 (individual differences) cannot be judged.** The posterior of the random-slope SD runs from 0.01 to 0.47. That implies person-level ORs of roughly 0.76–1.56, too wide to tell "everyone is the same" from "some people are sensitive and others are not".
-- **The H3 negative control also supports "no specificity".** Using the deviation of the *following* night to "predict" today's tiredness gives OR 1.04, almost the same as the main estimate of 1.09.
+- **H1 is not supported.** Under the decision rule written in advance (the interval must exclude 1), deviation in sleep timing shows no detectable within-person link to next-day tiredness. P(β > 0) = 0.85, leaning positive, but the effect is smaller than the design can detect. The upper end of the interval (OR 1.31) equals about +3.7 percentage points at the 14.5% baseline, the same order as E1, so this does not show that the effect is absent.
+- **H2 (individual differences) cannot be judged.** The posterior of the random-slope SD runs from 0.01 to 0.48. That implies person-level ORs of roughly 0.77–1.53, too wide to tell "everyone is the same" from "some people are sensitive and others are not".
+- **The H3 negative control also supports "no specificity".** Using the deviation of the *following* night to "predict" today's tiredness gives OR 1.06, almost the same as the main estimate of 1.10.
 
 ![Robustness](reports/figures/robustness_forest.png)
 
 *Figure 2: Point estimates and 95% intervals for the within-person sleep midpoint effect under each robustness check. The dashed line is the smallest OR detectable with 80% power (1.35, analysis plan section 6).*
 
-The ORs from the 9 robustness analyses all lie between 0.93 and 1.10 and none has an interval excluding 1; the FDR-adjusted GEE p-values are all ≥ 0.71. Yesterday's tiredness predicts neither a missing report the next day (OR 0.85, 0.65–1.12) nor a missing sleep record that night (OR 1.07, 0.85–1.34). Leaving out one person at a time, the GEE OR stays between 1.03 and 1.10, so no single person drives the result.
+The ORs from the 9 robustness analyses all lie between 0.95 and 1.11 and none has an interval excluding 1; the FDR-adjusted GEE p-values are all ≥ 0.58. Yesterday's tiredness does not predict a missing report today (OR 0.85, 0.65–1.12), and today's tiredness does not predict a missing sleep record tonight (OR 0.98, 0.83–1.15). Leaving out one person at a time, the GEE OR stays between 1.04 and 1.11, so no single person drives the result.
 
 **Nightly skin temperature (post hoc)**
 
-Earlier work [3] reported that higher nightly temperature is the strongest predictor of feeling sad or tense, but it did not separate between-person from within-person variation. The supplementary plan is in `analysis_addendum_temperature.md`, written before the analysis was run. The sample is 1,551 days from 51 people.
+Earlier work [3] reported that higher nightly temperature is the strongest predictor of feeling sad or tense, but it did not separate between-person from within-person variation. The supplementary plan is in `analysis_addendum_temperature.md`, written before the analysis was run. The sample is 1,545 days from 51 people.
 
-| Outcome | Pooled (as in the original study) | Within person | Between people (sex-adjusted) | Women |
-|---|---|---|---|---|
-| Tense/anxious or sad | **1.24** (1.08–1.43), p = 0.002 | 1.00 (0.81–1.20) | 1.09 (0.76–1.57) | **2.50** (1.14–5.57) |
-| Happy | **0.85** (0.73–0.97), p = 0.02 | 1.00 (0.85–1.21) | 0.82 (0.58–1.22) | 1.87 (0.83–4.39) |
-| Tired | 0.90 (0.79–1.04) | 1.06 (0.87–1.31) | 0.79 (0.59–1.05) | 1.09 (0.56–2.09) |
+| Outcome | Pooled, unclustered (original design) | Pooled, clustered by person (GEE) | Within person | Between people (sex-adjusted) | Women |
+|---|---|---|---|---|---|
+| Tense/anxious or sad | 1.24 (1.08–1.42), p = 0.002 | 1.04 (0.87–1.23), p = 0.67 | 0.99 (0.82–1.20) | 1.09 (0.77–1.58) | **2.38** (1.06–5.30) |
+| Happy | 0.83 (0.72–0.96), p = 0.01 | 0.93 (0.78–1.10), p = 0.37 | 0.97 (0.80–1.18) | 0.84 (0.57–1.26) | 1.80 (0.79–4.18) |
+| Tired | 0.90 (0.78–1.03), p = 0.14 | 0.99 (0.78–1.25), p = 0.94 | 1.06 (0.86–1.31) | 0.79 (0.60–1.07) | 1.11 (0.57–2.12) |
 
-Pooled, we **reproduced** the original association. But on days when a person's temperature is higher than their own usual, negative mood does not increase (OR 1.00). After controlling for sex, the between-person temperature effect also largely disappears. The association mostly reflects *who* (especially sex), not *which day*.
+The unclustered pooled model gives the original direction, but its p-value treats each person's roughly 30 days as independent. Once days are clustered by person, the association is not distinguishable from 0 (exchangeable GEE above). With an independence working correlation and robust standard errors, which keeps the same point estimate, the negative-mood interval just excludes 1 (1.24, 1.00–1.53, p = 0.048). So the pooled association is not a robust finding, and we do not claim to have reproduced it. On days when a person's temperature is higher than their own usual, negative mood does not increase (OR 0.99). After controlling for sex, the between-person temperature effect also largely disappears. The association mostly reflects *who* (especially sex), not *which day*. The clustered rows were added after the first version of this analysis.
 
 **Other sleep and physiology measures (exploratory)**
 
@@ -119,48 +119,48 @@ Among "good nights", ten within-person deviation measures were screened one at a
 
 | Compared with the person's usual | OR (per 1 SD) | p |
 |---|---|---|
-| More vigorous activity the previous day (1 SD ≈ 31 min) | **1.65** (1.24–2.20) | 0.001 |
-| Deep-sleep share vs the person's 30-day mean | **0.72** (0.59–0.89) | 0.002 |
-| Sleep midpoint shift; wake time | 0.76; 0.80 | ≥ 0.20 |
-| Resting HR; NREM HR; HRV | 0.89; 1.05; 0.94 | ≥ 0.47 |
-| Sleep debt over the previous 3 nights; last night shorter than usual | 0.93; 0.94 | ≥ 0.71 |
+| More vigorous activity the previous day (1 SD ≈ 31 min) | **1.57** (1.19–2.08) | 0.001 |
+| Deep-sleep share vs the person's 30-day mean | **0.75** (0.60–0.92) | 0.007 |
+| Sleep midpoint shift; wake time | 0.74; 0.83 | ≥ 0.17 |
+| Resting HR; NREM HR; HRV | 0.88; 0.99; 1.01 | ≥ 0.44 |
+| Sleep debt over the previous 3 nights; last night shorter than usual | 0.96; 1.03 | ≥ 0.80 |
 
-Deep-sleep share is not reliable: in the same model it is only marginal in the good-night subset (0.78, p = 0.04) and 0.96 (0.81–1.13) across all nights.
+Deep-sleep share is not reliable: in the same model it is only marginal in the good-night subset (0.79, p = 0.04) and 0.98 (0.84–1.15) across all nights.
 
 ### 3. Income side: 1 hour less sleep (post hoc)
 
-Sleep-duration deviation was only a control variable in advance, but its association is strong, so a negative control was added: in the same sample, the OR for the previous night is 0.71 (0.60–0.85) and for the following night 1.06 (0.94–1.20). The absolute effect was then estimated under the frozen plan.
+Sleep-duration deviation was only a control variable in advance, but its association is strong, so a negative control was added: in the same sample, the OR for the previous night is 0.74 (0.63–0.87) and for the following night 1.06 (0.94–1.20). The absolute effect was then estimated under the frozen plan.
 
-**E1 passes every decision rule.** Sleeping 1 hour less on one night raises next-day tiredness probability by 3.3 percentage points (1.9–4.8). The result holds in every sensitivity analysis, shown in the table below.
+**E1 passes every decision rule.** If there is no unmeasured confounding, sleeping 1 hour less on one night raises next-day tiredness probability by 3.0 percentage points (1.6–4.6). The interval excludes 0 under every model specification in the table below, but not against strong unmeasured confounding or non-random missingness: the E-value at the interval end is 1.45, and the interval includes 0 once the unfavourable missing days are assumed to have about 7.4 times the model-predicted odds of tiredness (δ = 2). Passing the rule is not evidence of causation (see Discussion).
 
 ### 4. Spending side: 30 more minutes of training (post hoc + exploratory)
 
-Exploratory analysis found the lead first: among good nights, the OR for more vigorous activity the previous day is 1.76 (1.24–2.50), across all nights 1.22 (1.04–1.44), and the negative control using the *next* day's activity gives 0.95 (0.83–1.08). The good-night subset has only 37 tired days, so the 1.76 should not be read as an effect size.
+Exploratory analysis found the lead first: among good nights, the OR for more vigorous activity the previous day is 1.63 (1.18–2.24), across all nights 1.21 (1.03–1.41), and the negative control using the *next* day's activity gives 0.93 (0.81–1.07). The good-night subset has only 36 tired days, so the 1.63 should not be read as an effect size.
 
-**E2 also passes the decision rule, but its evidence is clearly weaker than E1's.** Training 30 minutes more the previous day raises next-day tiredness probability by 3.1 percentage points (1.0–5.5). Vigorous activity is 0 minutes on 52% of days, so linearity is a strong assumption; with a quadratic term or `log1p`, the intervals include 0. Controlling for last night's sleep, the direct effect is +2.7 (0.9–5.1), close to the total effect, which suggests most of the effect of activity does not run through sleep duration.
+**E2 passes the decision rule, but we treat it as a hypothesis to test, not a finding.** Under the same assumption, training 30 minutes more the previous day goes with a 2.8 percentage point higher next-day tiredness probability (0.8–5.3). Vigorous activity is 0 minutes on 52% of days, so linearity is a strong assumption; with a quadratic term, `log1p`, or first reports before 13:00 only, the intervals include 0, and the MNAR interval already includes 0 at δ = 1. Chronic training load, earlier activity and illness are not measured. Controlling for last night's sleep, the direct effect is +2.5 (0.8–4.8), close to the total effect, which suggests most of the effect of activity does not run through sleep duration.
 
 ### 5. The full ledger (`reports/causal/`)
 
-About 1,560 days from 50 people; baseline tiredness probability about 14.7%. The 3 people missing relative to the analysis set each contribute 1 day and lack the previous 3 nights of sleep. RD is in percentage points.
+About 1,550 days from 50 people; baseline tiredness probability about 14.6%. The 3 people missing relative to the analysis set each contribute 1 day and lack the previous 3 nights of sleep. RD is in percentage points.
 
 | Analysis | E1: 1 h less sleep | E2: 30 min more training |
 |---|---|---|
-| **Bayesian g-computation (primary)** | **+3.3 (1.9–4.8)** | **+3.1 (1.0–5.5)** |
-| Risk ratio | 1.23 (1.13–1.33) | 1.21 (1.07–1.37) |
-| IPW for missingness | +3.4 (1.5–5.5) | +2.5 (0.6–5.2) |
-| Negative-exposure control | −0.3 (−1.5–0.8) | −0.6 (−2.3–0.9) |
-| Unweighted logistic | +3.4 (1.7–5.4) | +2.3 (0.5–4.8) |
-| Adding yesterday's tiredness | +3.6 (1.5–5.6) | +2.9 (0.9–6.4) |
-| First report before 13:00 only | +3.9 (1.8–6.2) | +3.0 (**−0.4**–5.7) |
-| Adding sleep midpoint deviation | +3.1 (1.6–5.0) | n/a |
-| Quadratic term | +3.4 (1.4–5.4) | +1.6 (**−0.7**–4.2) |
-| `log1p` activity | n/a | +1.8 (**−0.7**–4.6) |
-| E-value (point / interval end) | 1.76 / 1.51 | 1.71 / 1.35 |
-| MNAR tipping point δ | between 2 and 3 | between 0.5 and 1 |
+| **Bayesian g-computation (primary)** | **+3.0 (1.6–4.6)** | **+2.8 (0.8–5.3)** |
+| Risk ratio | 1.21 (1.11–1.31) | 1.19 (1.06–1.36) |
+| IPW for missingness | +3.0 (1.2–4.9) | +2.4 (0.6–4.9) |
+| Negative-exposure control | −0.4 (−1.6–0.7) | −0.7 (−2.4–0.7) |
+| Unweighted logistic | +3.1 (1.4–4.9) | +2.2 (0.5–4.5) |
+| Adding yesterday's tiredness | +3.2 (1.3–5.1) | +2.7 (0.8–6.0) |
+| First report before 13:00 only | +3.5 (1.5–5.7) | +2.7 (**−0.8**–5.4) |
+| Adding sleep midpoint deviation | +2.8 (1.3–4.5) | n/a |
+| Quadratic term | +3.0 (1.2–5.0) | +1.4 (**−0.9**–4.0) |
+| `log1p` activity | n/a | +1.6 (**−0.8**–4.3) |
+| E-value (point / interval end) | 1.71 / 1.45 | 1.67 / 1.30 |
+| MNAR tipping point δ | between 1.5 and 2 | between 0.5 and 1 |
 
-- **Reading δ.** δ = 2 means that on the unfavourable missing days, the odds of tiredness are about 7.4 times what the model predicts. E1 flips only beyond roughly this level; for E2 the interval already includes 0 at about 2.7 times (δ = 1).
-- **Reading the E-value.** An unmeasured confounder would need to be associated with both the exposure and the outcome by about 1.35–1.51 times to make the interval include 1. That is not high; illness or work stress could reach it.
-- **Model difference.** The unweighted logistic has no random effects, so its E2 estimate of 2.3 is lower than the Bayesian 3.1; this is a model difference. All parameters converged: R-hat ≤ 1.007, bulk ESS ≥ 952.
+- **Reading δ.** δ = 2 means that on the unfavourable missing days, the odds of tiredness are about 7.4 times what the model predicts. E1's interval still excludes 0 at about 4.5 times (δ = 1.5) and includes it at 7.4 times; for E2 the interval already includes 0 at about 2.7 times (δ = 1).
+- **Reading the E-value.** An unmeasured confounder would need to be associated with both the exposure and the outcome by about 1.30–1.45 times to make the interval include 1. That is not high; illness or work stress could reach it.
+- **Model difference.** The unweighted logistic has no random effects, so its E2 estimate of 2.2 is lower than the Bayesian 2.8; this is a model difference. All parameters converged: R-hat ≤ 1.004, bulk ESS ≥ 957.
 - **Feedback confounding.** Adding yesterday's tiredness does not shrink either estimate, so it is not a major threat for now.
 
 ## Side thread: sex stratification
@@ -173,17 +173,17 @@ Epidemiology stratifies first because a pooled average can hide differences and 
 
 `reports/causal/sex_strata.csv`, 51 people with sex recorded:
 
-| Stratified measure | Men (31 people, 970 days) | Women (20 people, 598 days) |
+| Stratified measure | Men (31 people, 965 days) | Women (20 people, 597 days) |
 |---|---|---|
-| Share of days with a first report of tired | 14.3% | 15.4% |
-| Share of days with a first report of tense/anxious or sad | 13.1% | **23.6%** |
-| Negative-mood share, person-level median | 7.5% | **23.4%** |
+| Share of days with a first report of tired | 14.2% | 15.2% |
+| Share of days with a first report of tense/anxious or sad | 13.5% | **23.6%** |
+| Negative-mood share, person-level median | 8.3% | **23.4%** |
 | Mean actual sleep | 6.50 h | 6.97 h |
 
-- **The gap is in mood, not in tiredness.** Women sleep 28 minutes longer on average and report tiredness at a similar rate, yet report negative mood about twice as often (OR 2.50 after adjustment). Neither the sleep score nor the tiredness check-in shows this gap.
-- **Sex is both a confounder and a dimension that must be stratified.** Pooled, the OR for "warmer night → worse mood" is 1.24; within person it is 1.00, and also close to 1 in each sex (men 1.12, women 0.88). Women's mean temperature is 0.38 °C higher and their negative mood is more frequent, so an unstratified model learns "who she is" as "how she is today".
-- **The effects in the ledger show no clear male-female difference for now.** For 1 hour less sleep: women +3.9 (0.6–7.6), men +2.9 (0.6–5.5), difference 1.0 (−3.2–5.3). For 30 more minutes of training: women +3.3 (−2.6–8.4), men +1.9 (0.1–4.9), difference 1.4 (−4.7–7.2). The intervals are wide, so we can claim neither that they are the same nor that they differ.
-- **These data cannot attribute the gap to the menstrual cycle.** The dataset has no cycle information, and the within-person temperature variation of women and men is almost identical (median SD 0.43 °C vs 0.42 °C). That compares only the amplitude of variation and does not show that a device cannot detect the cycle. The within-person OR of temperature on tiredness is 0.93 (0.71–1.21) in women and 1.17 (0.85–1.61) in men.
+- **The gap is in mood, not in tiredness.** Women sleep 28 minutes longer on average and report tiredness at a similar rate, yet report negative mood about twice as often (OR 2.38 after adjustment). Neither the sleep score nor the tiredness check-in shows this gap.
+- **Sex is both a confounder and a dimension that must be stratified.** Pooled and unclustered, the OR for "warmer night → worse mood" is 1.24 (1.04 once clustered by person); within person it is 0.99, and also close to 1 in each sex (men 1.10, women 0.89). Women's mean temperature is 0.38 °C higher and their negative mood is more frequent, so an unstratified model learns "who she is" as "how she is today".
+- **The effects in the ledger show no clear male-female difference for now.** For 1 hour less sleep: women +3.8 (0.6–7.5), men +2.4 (0.4–4.6), difference 1.4 (−2.6–5.6). For 30 more minutes of training: women +3.4 (−2.3–8.7), men +1.7 (−0.1–4.5), difference 1.8 (−4.1–7.7). The intervals are wide, so we can claim neither that they are the same nor that they differ.
+- **These data cannot attribute the gap to the menstrual cycle.** The dataset has no cycle information, and the within-person temperature variation of women and men is almost identical (median SD 0.43 °C vs 0.42 °C). That compares only the amplitude of variation and does not show that a device cannot detect the cycle. The within-person OR of temperature on tiredness is 0.92 (0.70–1.20) in women and 1.20 (0.88–1.69) in men.
 
 ### Literature and existing products
 
@@ -230,7 +230,7 @@ Each follows the order "user pain point → evidence from the data → product o
 ### 1. A recovery score must record both income and spending (post hoc + exploratory)
 
 - **Pain point.** When the score is high and the person is tired, the user can only doubt the device or doubt themselves.
-- **Evidence.** Short sleep and extra training are each linked to higher next-day tiredness; on days when both are bad the tired share is 21.5%, versus 9.6% when neither is. The training-load half is weaker evidence and stays a hypothesis for now.
+- **Evidence.** Short sleep and extra training are each linked to higher next-day tiredness; on days when both are bad the tired share is 21.2%, versus 9.8% when neither is. The training-load half is weaker evidence and stays a hypothesis for now.
 - **Product opportunity.**
   - **Explanation layer.** When the sleep score is high and the user still feels tired, say why, for example "yesterday's training was 40% above your usual", instead of leaving the user to doubt the device.
   - **Include training load in the recovery score**, not sleep alone.
@@ -239,17 +239,17 @@ Each follows the order "user pain point → evidence from the data → product o
 
 ### 2. Compare with "your usual", not only with absolute thresholds (post hoc)
 
-- **Evidence.** The effect of 1 hour less sleep on one night is robust (+3.3 percentage points); the absolute "7 h of sleep" threshold separates poorly (12.2% vs 16.5%).
+- **Evidence.** The estimated effect of 1 hour less sleep on one night is +3.0 percentage points under the stated assumptions; the absolute "7 h of sleep" threshold separates poorly (12.1% vs 16.4%).
 - **Product opportunity.** Phrase every prompt relative to the user's baseline; new users have no baseline in the first 1–2 weeks, so the cold-start period needs its own design.
 
 ### 3. A "regular schedule" reminder should not promise next-day results (pre-specified)
 
-- **Evidence.** Deviation in sleep timing has no detectable link to next-day tiredness (OR 1.09, 0.92–1.31, consistent across the 9 robustness analyses).
+- **Evidence.** Deviation in sleep timing has no detectable link to next-day tiredness (OR 1.10, 0.92–1.31, consistent across the 9 robustness analyses).
 - **Product opportunity.** If a "keep a regular schedule" reminder stays, phrase it as a long-term benefit, not "you'll feel more energetic tomorrow"; run an experiment before investing in development.
 
 ### 4. Build the personal baseline first, then the complex model (pre-specified + literature)
 
-- **Evidence.** Differences between people are far larger than day-to-day fluctuation (person-intercept SD 0.72), and a third of the people with good-night records never reported tiredness. In earlier work [12], under random splits with personalized models, the "user mean" baseline beat the paper's multimodal model on LifeSnaps (AUC 80.4 vs 74.6) but lost on PMData (84.1 vs 89.0).
+- **Evidence.** Differences between people are far larger than day-to-day fluctuation (person-intercept SD 0.74), and 7 of the 40 people with good-night records (18%) never reported tiredness on any analysed day. In earlier work [12], under random splits with personalized models, the "user mean" baseline beat the paper's multimodal model on LifeSnaps (AUC 80.4 vs 74.6) but lost on PMData (84.1 vs 89.0).
 - **Product opportunity.** Ship a personal baseline and user segments first, then consider complex models; any complex model must beat the personal mean as a release gate.
 
 ### 5. Subjective labels are scarce, so check-ins must cost almost nothing (dataset description)
@@ -265,10 +265,10 @@ The two questions below follow from the main thread but are not the ledger itsel
 
 The main thread is "data looks normal but I'm tired"; here it is the other way round: physiological measures deviate from the person's baseline, yet the user feels nothing. A common explanation is that acute stress raises cortisol and adrenaline, which mask fatigue. But this dataset has no hormone measurements, so **this mechanism cannot be tested here and stays a hypothesis**.
 
-- **Evidence** (`reports/posthoc_good_nights/masked_strain.csv`; 37 people, 1,086 days with heart rate and HRV):
+- **Evidence** (`reports/posthoc_good_nights/masked_strain.csv`; 37 people, 1,083 days with heart rate and HRV):
   - A "strain day" is one on which resting HR or NREM HR is more than 1 SD above the person's mean, or RMSSD is more than 1 SD below. Such days are 29% of all days, and on 78% of them no tiredness was reported.
-  - "Strong strain days", with at least 2 of the 3 signals deviating together, are 12% of days; the tired share is 32% (14% on other days), so **68% still do not feel tired**. These people report "happy" or "alert" more often (40% vs 28%), consistent with a state of arousal, but exercise, alcohol or caffeine could equally explain it.
-  - **"Under load but not tired" does not predict being more tired over the next 3 days**: OR 1.03 (0.67–1.59). So the feature cannot be sold with "you will crash later"; its value has to be shown with outcomes other than tiredness.
+  - "Strong strain days", with at least 2 of the 3 signals deviating together, are 12% of days; the tired share is 31% (14% on other days), so **69% still do not feel tired**. These people report "happy" or "alert" more often (41% vs 28%), consistent with a state of arousal, but exercise, alcohol or caffeine could equally explain it.
+  - **"Under load but not tired" does not predict being more tired over the next 3 days**: OR 1.07 (0.70–1.64). So the feature cannot be sold with "you will crash later"; its value has to be shown with outcomes other than tiredness.
   - **Cost of alert rules** ([interactive simulator](https://arcadianlyric.github.io/WearableTech_Product/)). Baselines use only the previous 14 days, which is what a real product would have. The default rule is 2 signals, 2 consecutive days, 1 SD: on average 1.0 alerts per person per month (0.8–1.2); the tired share on alert days is 26% (10%–40%) against a base rate of 16%, with overlapping intervals; only 6.9% of tired days are covered. The default rule was fixed in advance; the other 26 rules are sensitivity exploration only.
   - Physiological background: in chronic sleep restriction experiments, subjective sleepiness stops rising quickly while cognitive performance keeps declining [13]. "Feeling fine" is not the same as "recovered".
 - **Product opportunity.**
@@ -322,7 +322,7 @@ A common complaint: when stressed, I wake very early and cannot go back to sleep
 
 - 53 people with a median of 29 days each; the minimum detectable effect is about OR 1.35, so smaller true effects will likely be missed.
 - Mood is a single choice among 7: a person may feel both "tired" and "relaxed" but can pick only one, so measurement is coarse.
-- Only 66% of days have a first report before 13:00, so "the next morning" is not precisely defined.
+- Only 65% of days have a first report before 13:00, so "the next morning" is not precisely defined.
 - `very_active_minutes` is not training load and cannot distinguish types of exercise.
 - A shift represents a change on one night or one day and cannot be extrapolated to a long-term change in schedule or training plan.
 - Only 20 women; the stratified intervals are wide, and the dataset has no cycle information.
